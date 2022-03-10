@@ -30,29 +30,14 @@ LIBXSLT_VERSION_INFO=`expr $LIBXSLT_MAJOR_VERSION + $LIBXSLT_MINOR_VERSION`:$LIB
 LIBXSLT_VERSION_NUMBER=`expr $LIBXSLT_MAJOR_VERSION \* 10000 + $LIBXSLT_MINOR_VERSION \* 100 + $LIBXSLT_MICRO_VERSION`
 LIBXSLT_MAJOR_MINOR_VERSION=$LIBXSLT_MAJOR_VERSION.$LIBXSLT_MINOR_VERSION
 
-if test -f CVS/Entries; then
-  extra=`grep ChangeLog CVS/Entries | grep -v LIBXSLT | sed -e s\%/ChangeLog/1\.%% -e s\%/.*$%%`
-  echo extra=$extra
-  if test "$extra" != ""
-  then
-      LIBXSLT_VERSION_EXTRA="-CVS$extra"
-  fi
-else if test -d .svn ; then
-  extra=`svn info | grep Revision | sed 's+Revision: ++'`
-  echo extra=$extra
-  if test "$extra" != ""
-  then
-      LIBXSLT_VERSION_EXTRA="-SVN$extra"
-  fi
-else if test -d .git ; then
+if test -d .git ; then
   extra=`git describe | sed 's+LIBXSLT[[0-9.]]*-++'`
   echo extra=$extra
   if test "$extra" != ""
   then
       LIBXSLT_VERSION_EXTRA="-GIT$extra"
+      LIBEXSLT_VERSION_EXTRA="-GIT$extra"
   fi
-fi
-fi
 fi
 
 AC_SUBST(LIBXSLT_MAJOR_VERSION)
@@ -72,10 +57,6 @@ LIBEXSLT_VERSION=$LIBEXSLT_MAJOR_VERSION.$LIBEXSLT_MINOR_VERSION.$LIBEXSLT_MICRO
 LIBEXSLT_VERSION_INFO=`expr $LIBEXSLT_MAJOR_VERSION + $LIBEXSLT_MINOR_VERSION`:$LIBEXSLT_MICRO_VERSION:$LIBEXSLT_MINOR_VERSION
 
 LIBEXSLT_VERSION_NUMBER=`expr $LIBEXSLT_MAJOR_VERSION \* 10000 + $LIBEXSLT_MINOR_VERSION \* 100 + $LIBEXSLT_MICRO_VERSION`
-
-if test -f CVS/Entries; then
-  LIBEXSLT_VERSION_EXTRA=-CVS`grep ChangeLog CVS/Entries | sed -e s\%/ChangeLog/1\.%% -e s\%/.*$%%`
-fi
 
 AC_SUBST(LIBEXSLT_MAJOR_VERSION)
 AC_SUBST(LIBEXSLT_MINOR_VERSION)
@@ -126,8 +107,6 @@ AC_PROG_CPP
 AC_PATH_PROG(XMLLINT, xmllint, /usr/bin/xmllint)
 AC_PATH_PROG(XSLTPROC, xsltproc, /usr/bin/xsltproc)
 PKG_PROG_PKG_CONFIG
-
-AC_HEADER_STDC
 
 LT_INIT(win32-dll)
 
@@ -717,7 +696,6 @@ libexslt.pc
 libxslt-config.cmake
 libxslt/Makefile
 libxslt/xsltconfig.h
-libxslt/xsltwin32config.h
 libexslt/Makefile
 libexslt/exsltconfig.h
 xsltproc/Makefile
